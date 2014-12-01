@@ -32,7 +32,7 @@ module LCDCON #(parameter                 DIGIT = 8)
     end
   endgenerate
 
-  always @ (posedge CLK) begin
+  always @(posedge CLK) begin
     if (!RST_X) begin
       TXD       <= 1;
       READY     <= 1;
