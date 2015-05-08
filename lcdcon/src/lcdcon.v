@@ -46,12 +46,12 @@ module LCDCON #(parameter                 DIGIT = 8)
         waitnum <= 0;
         if (WE) begin
           READY <= 0;
-          D     <= DATA;
           cnt   <= (DIGIT+1)*10+2;
+          D     <= DATA;
         end
       end else if (cnt == (DIGIT+1)*10+2) begin
-        cnt <= cnt - 1;
         cmd <= value;
+        cnt <= cnt - 1;
       end else if (waitnum >= `SERIAL_WCNT) begin
         TXD     <= cmd[0];
         READY   <= (cnt == 1);
