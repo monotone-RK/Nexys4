@@ -1,5 +1,5 @@
 /******************************************************************************/
-/* LCD Controller                                      monotone-RK 2014.12.01 */
+/* LCD Controller                                      monotone-RK 2015.05.09 */
 /******************************************************************************/
 `default_nettype none
 
@@ -34,30 +34,33 @@ module LCDCON #(parameter                 DIGIT = 8)
 
   always @(posedge CLK) begin
     if (!RST_X) begin
-      TXD       <= 1;
-      READY     <= 1;
-      cmd       <= {((DIGIT+1)*10){1'b1}};
-      waitnum   <= 0;
-      cnt       <= 0;
-    end else if (READY) begin
-      TXD       <= 1;
-      waitnum   <= 0;
-      if (WE) begin
-        READY <= 0;
-        D     <= DATA;
-        cnt   <= (DIGIT+1)*10+2;
-      end
-    end else if (cnt == (DIGIT+1)*10+2) begin
-      cnt <= cnt - 1;
-      cmd <= value;
-    end else if (waitnum >= `SERIAL_WCNT) begin
-      TXD       <= cmd[0];
-      READY     <= (cnt == 1);
-      cmd       <= {1'b1, cmd[(DIGIT+1)*10-1:1]};
-      waitnum   <= 1;
-      cnt       <= cnt - 1;
+      TXD     <= 1;
+      READY   <= 1;
+      cmd     <= {((DIGIT+1)*10){1'b1}};
+      waitnum <= 0;
+      cnt     <= 0;
+      D       <= 0;
     end else begin
-      waitnum   <= waitnum + 1;
+      if (READY) begin
+        TXD     <= 1;
+        waitnum <= 0;
+        if (WE) begin
+          READY <= 0;
+          D     <= DATA;
+          cnt   <= (DIGIT+1)*10+2;
+        end
+      end else if (cnt == (DIGIT+1)*10+2) begin
+        cnt <= cnt - 1;
+        cmd <= value;
+      end else if (waitnum >= `SERIAL_WCNT) begin
+        TXD     <= cmd[0];
+        READY   <= (cnt == 1);
+        cmd     <= {1'b1, cmd[(DIGIT+1)*10-1:1]};
+        waitnum <= 1;
+        cnt     <= cnt - 1;
+      end else begin
+        waitnum <= waitnum + 1;
+      end
     end
   end
 endmodule
