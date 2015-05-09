@@ -10,7 +10,7 @@ module main(input  wire      CLK_IN,
             output wire      TXD);
     
   wire CLK, RST_X;
-  CLKGEN clkgen(CLK_IN, ~RST_X_IN, CLK, RST_X);
+  CLKRSTGEN clkrstgen(CLK_IN, ~RST_X_IN, CLK, RST_X);
     
   reg        we;
   reg [25:0] cnt;
